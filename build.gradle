@@ -12,7 +12,7 @@ plugins {
     id 'java-library'
 }
 
-ext.FRC_YEAR = "2019"
+ext.FRC_YEAR = "2021"
 
 
 repositories {
@@ -28,18 +28,19 @@ def getFrcToolsRoot ()
 {
     if (OperatingSystem.current ().isWindows () )
     {
+        //default: C:\Users\Public\wpilib\2021\tools
         String pubFolder = System.getenv("PUBLIC")
         if (pubFolder == null)
         {
             pubFolder = "C:\\Users\\Public"
         }
 
-        return pubFolder + "/frc${FRC_YEAR}" 
+        return pubFolder + "/wpilib/${FRC_YEAR}" 
 
     }
     else
     {
-        return System.getProperty ("user.home") + "/frc${FRC_YEAR}"
+        return System.getProperty ("user.home") + "/wpilib/${FRC_YEAR}"
     }
 } 
 

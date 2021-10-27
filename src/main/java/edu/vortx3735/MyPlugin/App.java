@@ -17,6 +17,7 @@ public class App extends Plugin {
 
 		return ImmutableList.of(WidgetType.forAnnotatedWidget(MyWidget.class),
 				WidgetType.forAnnotatedWidget(MyDataBoundWidget.class),
-				WidgetType.forAnnotatedWidget(MyMapBoundWidget.class));
+				WidgetType.forAnnotatedWidget(MyMapBoundWidget.class),
+				WidgetType.forAnnotatedWidget(AutoStepWidget.class));
 	}
 }
