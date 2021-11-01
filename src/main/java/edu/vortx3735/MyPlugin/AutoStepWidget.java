@@ -12,12 +12,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.TextFieldListCell;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javafx.beans.value.ChangeListener;
@@ -47,21 +50,30 @@ public class AutoStepWidget extends SimpleAnnotatedWidget<String[]> {
 	@FXML
 	private void initialize() {
 		selectedAuto.setText("No File Selected");
-		System.out.println(System.getProperty("user.home") + "/autos");
-		File folder = new File(System.getProperty("user.home") + "/autos");
-		File[] listOfFiles = folder.listFiles();
-		var fileCollection = FXCollections.observableArrayList(listOfFiles);
-		selector.setItems(fileCollection);
-		steps.setItems(stepList);
-		final var theWidget = this;
-		dataProperty().addListener(new ChangeListener<String[]>() {
-
-			@Override
-			public void changed(ObservableValue<? extends String[]> arg0, String[] arg1, String[] arg2) {
-				theWidget.setSteps(arg0.getValue());
+		try {
+			var autoFolderPath = Paths.get(System.getProperty("user.home"), "/autos");
+			if(!Files.exists(autoFolderPath)) {
+				Files.createDirectory(autoFolderPath);
 			}
-			
-		});;
+			File folder = new File(autoFolderPath.toString());
+			File[] listOfFiles = folder.listFiles();
+			var fileCollection = FXCollections.observableArrayList(listOfFiles);
+			selector.setItems(fileCollection);
+			steps.setItems(stepList);
+			steps.setEditable(true);
+			steps.setCellFactory(TextFieldListCell.forListView());
+			final var theWidget = this;
+			dataProperty().addListener(new ChangeListener<String[]>() {
+	
+				@Override
+				public void changed(ObservableValue<? extends String[]> arg0, String[] arg1, String[] arg2) {
+					theWidget.setSteps(arg0.getValue());
+				}
+				
+			});;
+		} catch(Exception ex) {
+			selectedAuto.setText("Failed to set up Widget: " + ex.getMessage());
+		}
 	}
 
 	@Override
